@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "build": "node build.js",
+    "cap:sync": "npm run build && npx cap sync",
+    "cap:open:android": "npx cap open android"
+  },
   "dependencies": {
     "glob": "^13.0.6"
   },
