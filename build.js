@@ -23,26 +23,25 @@ const excludeList = [
     'netlify.toml'
 ];
 
-function isExcluded(srcPath) {
-    const relativePath = path.relative(srcDir, srcPath);
-    for (const exclude of excludeList) {
-        if (relativePath === exclude || relativePath.startsWith(exclude + path.sep)) {
-            return true;
-        }
-    }
-    return false;
+function isExcluded(itemName) {
+    return excludeList.includes(itemName);
 }
 
 // Remove old www contents
-fs.rmSync(destDir, { recursive: true, force: true });
+if (fs.existsSync(destDir)) {
+    fs.rmSync(destDir, { recursive: true, force: true });
+}
 fs.mkdirSync(destDir);
 
-fs.cpSync(srcDir, destDir, {
-    recursive: true,
-    filter: (src, dest) => {
-        if (src === srcDir) return true;
-        return !isExcluded(src);
+const items = fs.readdirSync(srcDir);
+
+for (const item of items) {
+    if (!isExcluded(item)) {
+        const srcPath = path.join(srcDir, item);
+        const destPath = path.join(destDir, item);
+        
+        fs.cpSync(srcPath, destPath, { recursive: true });
     }
-});
+}
 
 console.log('Build completed. Files copied to www/');
