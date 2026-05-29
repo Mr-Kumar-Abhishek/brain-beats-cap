@@ -39,6 +39,17 @@ jobs:
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > android/app/your_keystore.jks
 
+      - name: Verify keystore
+        env:
+          MYAPP_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          MYAPP_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          echo "Keystore size: $(wc -c < android/app/your_keystore.jks) bytes"
+          echo "Key alias from secret: '$MYAPP_RELEASE_KEY_ALIAS'"
+          keytool -list -keystore android/app/your_keystore.jks \
+            -storepass "$MYAPP_RELEASE_STORE_PASSWORD" \
+            -alias "$MYAPP_RELEASE_KEY_ALIAS" -v 2>&1 | head -20
+
       - name: Build Release AAB
         env:
           MYAPP_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
