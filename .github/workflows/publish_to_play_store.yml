@@ -35,8 +35,8 @@ jobs:
       - name: Build Release AAB
         run: |
           cd android
-          chmod +x ./gradlew
-          ./gradlew bundleRelease
+          chmod +x ../gradlew
+          ../gradlew bundleRelease
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1

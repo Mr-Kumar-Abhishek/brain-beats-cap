@@ -7,7 +7,7 @@ android {
   }
 }
 
-apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
+apply from: "${rootProject.projectDir}/capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
 
 
