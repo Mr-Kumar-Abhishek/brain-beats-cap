@@ -39,10 +39,18 @@ jobs:
           echo "$KEYSTORE_BASE64" | base64 -d > android/app/your_keystore.jks
 
       - name: Build Release AAB
+        env:
+          MYAPP_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          MYAPP_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          MYAPP_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew bundleRelease
+          ./gradlew bundleRelease \
+            -PMYAPP_RELEASE_STORE_FILE=your_keystore.jks \
+            -PMYAPP_RELEASE_STORE_PASSWORD="$MYAPP_RELEASE_STORE_PASSWORD" \
+            -PMYAPP_RELEASE_KEY_ALIAS="$MYAPP_RELEASE_KEY_ALIAS" \
+            -PMYAPP_RELEASE_KEY_PASSWORD="$MYAPP_RELEASE_KEY_PASSWORD"
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
